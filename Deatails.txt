@@ -1,0 +1,141 @@
+DB model for Guvi Zen class
+
+1.Users Table :
+
+Column_Name	    Data_Type	        Description
+
+user_id	        INT (PK)	        Unique identifier for the user
+username	    VARCHAR(50)	        User's username
+password_hash	VARCHAR(255)	    Hashed password
+email	        VARCHAR(100)	    User's email address
+full_name	    VARCHAR(100)	    Full name of the user
+phone	        VARCHAR(20)	        User's phone number
+user_type	    ENUM('student',    'instructor', 'admin')	Type of user (student, instructor, admin)
+created_at	    DATETIME	        Account creation timestamp
+updated_at	    DATETIME	        Last update timestamp
+
+
+2.Classes Table :
+
+Column_Name	         Data_Type	            Description
+
+class_id	         INT (PK)	            Unique identifier for the class
+title	             VARCHAR(255)	        Title of the class
+timing	             VARCHAR(100)	        Timing of the class
+isEnded	             BOOLEAN	            Whether the class has ended
+description	         TEXT	                Description of the class
+instructor_id	     INT (FK)	            Reference to the instructor (Users)
+schedule	         TEXT	                Class schedule (could be JSON or another format)
+created_at	         DATETIME	            Class creation timestamp
+updated_at	         DATETIME	            Last update timestamp
+
+
+3.Tasks Table :
+
+Column_Name	        Data_Type	           Description
+
+task_id	            INT (PK)	           Unique identifier for the task
+title	            VARCHAR(255)	       Title of the task
+tag	                VARCHAR(50)	           Tag associated with the task
+
+
+4.Queries Table :
+
+Column_Name	          Data_Type	               Description
+
+query_id	          INT (PK)		           Unique identifier for the query
+title	              VARCHAR(255)		       Title of the query
+description	          TEXT		       	       Description of the query
+tag	                  VARCHAR(50)		       Tag associated with the query
+date	              DATETIME	       	       Date the query was created
+language	          VARCHAR(50)		       Programming language used
+time	              TIME		       	       Time of the query
+
+5.Events Table:
+
+Column_Name	          Data_Type           	Description
+
+event_id	        INT (PK)	        Unique identifier for the event
+event_type        	ENUM('Hackathon', 'Placement Session', 'Other')	Type of event (e.g., Hackathon, Placement Session)
+description        	TEXT	            Description of the event
+event_date        	DATETIME	        Date and time of the event
+class_id	        INT (FK)        	Reference to the class (if applicable)
+
+
+6.Enrollments Table:
+
+Column_Name		     Data_Type	         Description
+
+enrollment_id		 INT (PK)	         Unique identifier for the enrollment
+class_id		     INT (FK)	         Reference to the class (Classes)
+user_id		         INT (FK)	         Reference to the student (Users)
+enrollment_date	     DATETIME	         Date of enrollment
+
+
+7.Assignments Table:
+
+Column_Name	          Data_Type	         Description
+
+assignment_id	      INT (PK)	       Unique identifier for the assignment
+class_id	          INT (FK)	       Reference to the class (Classes)
+title	              VARCHAR(255)     Title of the assignment
+description	          TEXT	           Description of the assignment
+due_date	          DATETIME	       Due date of the assignment
+created_at	          DATETIME	       Assignment creation timestamp
+updated_at	          DATETIME	       Last update timestamp
+
+
+8.Submissions Table:
+
+Column_Name	        Data_Type	           Description
+
+submission_id	    INT (PK)	       Unique identifier for the submission
+assignment_id	    INT (FK)	       Reference to the assignment (Assignments)
+user_id	            INT (FK)	       Reference to the student (Users)
+submission_date	    DATETIME	       Date of submission
+file_url	        VARCHAR(255)	   URL to the submitted file
+grade	            VARCHAR(10)	       Grade given for the submission
+feedback	        TEXT	           Instructor feedback on the submission
+
+9.Reviews Table:
+
+Column_Name	         Data_Type	               Description
+
+review_id	        INT (PK)	            Unique identifier for the review
+class_id	        INT (FK)            	Reference to the class (Classes)
+user_id            	INT (FK)	            Reference to the user (Users)
+rating	            INT	                    Rating given (e.g., 1-5)
+comment	            TEXT	                Review comment
+created_at	        DATETIME	            Review creation timestamp
+
+10.Categories Table
+
+Column_Name       	    Data_Type	      	Description
+
+category_id	      	    INT (PK)	      	Unique identifier for the category
+name      	      		VARCHAR(100)	    Name of the category
+description      		TEXT	      	    Description of the category
+
+11.ClassCategories Table
+
+Column_Name      	Data_Type	       Description
+
+class_id	     	INT (FK)	      Reference to the class (Classes)
+category_id	     	INT (FK)	      Reference to the category (Categories)
+
+
+ Relationships Reference 
+ 
+1  : classes.instructor_id > users.id                 many-to-one
+2  : classes.mentor_id > mentors.id                   many-to-one
+3  : mentors.user_id > users.id                       one-to-one
+4  : enrollments.class_id > classes.id                many-to-one
+5  : enrollments.user_id > users.id                   many-to-one
+6  : assignments.class_id > classes.id                many-to-one
+7  : submissions.assignment_id > assignments.id       many-to-one
+8  : submissions.user_id > users.id                   many-to-one
+9  : reviews.class_id > classes.id                    many-to-one
+10 : reviews.user_id > users.id                       many-to-one
+11 : events.class_id > classes.id                     many-to-one
+12 : class_categories.class_id > classes.id           many-to-one
+13 : class_categories.category_id > categories.id     many-to-one
